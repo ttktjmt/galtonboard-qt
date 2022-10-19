@@ -1,2 +1,2 @@
 # galton-board-qt
-The galton board simulator usign qt
+The galton board simulator using Qt
