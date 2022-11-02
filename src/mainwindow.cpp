@@ -38,11 +38,12 @@ MainWindow::MainWindow(QWidget *parent)
     body->CreateFixture(&fixtureDef);
 
     // Simulating the World
-    for(int32 i = 0; i < 60; i++){
+    for(int32 i = 0; i < 60000; i++){
         world.Step(timeStep, velocityIterations, positionIterations);
         b2Vec2 position = body->GetPosition();
         float angle = body->GetAngle();
         printf("%d:  %4.2f %4.2f %4.2f\n", i,  position.x, position.y, angle);
+        gbs->pmi->setPos(position.x, position.y);
     }
 }
 
