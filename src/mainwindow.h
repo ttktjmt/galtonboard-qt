@@ -2,9 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QImage>
 #include "include/box2d/box2d.h"
 
-#include "galtonboardscene.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,8 +23,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
-    GaltonBoardScene* gbs;
+    QGraphicsScene *scn;
+    QImage *img;
+    QGraphicsPixmapItem *pix;
 
     const float timeStep = 1.0f / 60.0f;
     const int32 velocityIterations = 6;
