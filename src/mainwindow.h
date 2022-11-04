@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QImage>
+#include <QTimer>
 #include "include/box2d/box2d.h"
 
 
@@ -21,11 +22,18 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_pushButton_released();
+    void update();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scn;
     QImage *img;
     QGraphicsPixmapItem *pix;
+    QTimer update_timer;
+    b2World *world;
+    b2Body *body;
 
     const float timeStep = 1.0f / 60.0f;
     const int32 velocityIterations = 6;

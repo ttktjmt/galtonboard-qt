@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>res/ball.png</file>
-        <file>res/test.png</file>
     </qresource>
 </RCC>

@@ -16,12 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Create a world
     b2Vec2 gravity(0.0f, -9.8f);
-    b2World world(gravity);
+//    b2Vec2 gravity(0.0f, -0.1f);
+    world = new b2World(gravity);
 
     // Create Static Body (Ground)
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
-    b2Body* groundBody = world.CreateBody(&groundBodyDef);
+    b2Body* groundBody = world->CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
     groundBox.SetAsBox(50.0f, 10.0f);
@@ -30,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Create Dynamic Body
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 10.0f);
-    b2Body* body = world.CreateBody(&bodyDef);
+    bodyDef.position.Set(0.0f, 4.0f);
+    body = world->CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     dynamicBox.SetAsBox(1.0f, 1.0f);
@@ -44,16 +45,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     body->CreateFixture(&fixtureDef);
 
-    // Simulating the World
-    for(int32 i = 0; i < 600; i++){
-        world.Step(timeStep, velocityIterations, positionIterations);
-        b2Vec2 position = body->GetPosition();
-        float angle = body->GetAngle();
-        printf("%d:  %4.2f %4.2f %4.2f\n", i,  position.x, position.y, angle);
-    }
+    connect(&update_timer,SIGNAL(timeout()),this,SLOT(update()));
+    update_timer.start(30);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_pushButton_released()
+{
+    body->SetAwake(true);
+    b2Vec2 pos(0.0f, 4.0f);
+    body->SetTransform(pos, 0.0f);
+    update_timer.start(30);
+}
+
+void MainWindow::update()
+{
+    world->Step(timeStep, velocityIterations, positionIterations);
+    b2Vec2 position = body->GetPosition();
+    float angle = body->GetAngle();
+    printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+    pix->setPos(position.x*100, -position.y*100);
 }
