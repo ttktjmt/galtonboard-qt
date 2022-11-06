@@ -16,12 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Create a world
     b2Vec2 gravity(0.0f, -9.8f);
-//    b2Vec2 gravity(0.0f, -0.1f);
     world = new b2World(gravity);
 
     // Create Static Body (Ground)
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -10.0f);
+    groundBodyDef.position.Set(0.0f, -13.0f);
     b2Body* groundBody = world->CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
@@ -45,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     body->CreateFixture(&fixtureDef);
 
-    connect(&update_timer,SIGNAL(timeout()),this,SLOT(update()));
-    update_timer.start(30);
+    connect(&update_timer,  SIGNAL(timeout()),  this,   SLOT(update()));
+    update_timer.start(5);
 
 }
 
@@ -60,7 +59,7 @@ void MainWindow::on_pushButton_released()
     body->SetAwake(true);
     b2Vec2 pos(0.0f, 4.0f);
     body->SetTransform(pos, 0.0f);
-    update_timer.start(30);
+    update_timer.start(5);
 }
 
 void MainWindow::update()
