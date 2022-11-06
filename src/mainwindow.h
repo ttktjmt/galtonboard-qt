@@ -7,7 +7,7 @@
 #include <QGraphicsView>
 #include <QImage>
 #include <QTimer>
-#include "include/box2d/box2d.h"
+#include "Box2D/Box2D.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -34,6 +34,8 @@ private:
     QTimer update_timer;
     b2World *world;
     b2Body *body;
+
+    unsigned int update_interval_msec = 1;
 
     const float timeStep = 1.0f / 60.0f;
     const int32 velocityIterations = 6;

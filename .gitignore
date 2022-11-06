@@ -25,11 +25,10 @@ build-*
 *.smod
 
 # Compiled Static libraries
-# ^ comment out
 *.lai
 *.la
 *.a
-# *.lib
+*.lib
 
 # Executables
 *.exe

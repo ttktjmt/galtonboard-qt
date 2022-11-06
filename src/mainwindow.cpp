@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     body->CreateFixture(&fixtureDef);
 
     connect(&update_timer,  SIGNAL(timeout()),  this,   SLOT(update()));
-    update_timer.start(5);
+    update_timer.start(update_interval_msec);
 
 }
 
@@ -59,7 +59,7 @@ void MainWindow::on_pushButton_released()
     body->SetAwake(true);
     b2Vec2 pos(0.0f, 4.0f);
     body->SetTransform(pos, 0.0f);
-    update_timer.start(5);
+    update_timer.start(update_interval_msec);
 }
 
 void MainWindow::update()
