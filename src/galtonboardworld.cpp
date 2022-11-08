@@ -6,6 +6,7 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     Accelerometer = new QAccelerometer();
     Accelerometer->setAccelerationMode(QAccelerometer::Gravity);
     Accelerometer->setActive(true);
+    Accelerometer->start();
 
     // Create Static Body (Ground)
     b2BodyDef groundBodyDef;
@@ -49,7 +50,7 @@ void GaltonBoardWorld::update_gravity()
 {
     try {
         auto acc = Accelerometer->reading();
-        b2Vec2 gravity(-acc->x(), acc->y());
+        b2Vec2 gravity(-acc->x(), -acc->y());
         this->SetGravity(gravity);
     }
     catch (...) {
