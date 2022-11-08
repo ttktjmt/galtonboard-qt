@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "galtonboardview.h"
+#include "galtonboardworld.h"
 
 #include <QMainWindow>
 
@@ -19,7 +20,7 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow  *ui;
     GaltonBoardView *gbv;
 };
 

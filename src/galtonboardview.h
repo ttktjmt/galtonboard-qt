@@ -1,38 +1,32 @@
 #ifndef GALTONBOARDVIEW_H
 #define GALTONBOARDVIEW_H
 
+#include "galtonboardworld.h"
+
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QImage>
-#include <QTimer>
 #include <QWidget>
-#include "Box2D/Box2D.h"
+#include <Box2D/Box2D.h>
 
 
 class GaltonBoardView : public QGraphicsView
 {
 public:
     GaltonBoardView(QObject* parent = nullptr);
+    GaltonBoardWorld    *gbw;
 
 public slots:
-    void button_pushed();
-
-private slots:
-    void update();
 
 private:
-    b2Body *body;
-    b2World *world;
-    QImage *img;
-    QGraphicsPixmapItem *pix;
-    QGraphicsScene *scn;
+    void setPixPos();
 
     QTimer update_timer;
-    unsigned int update_interval_msec = 5;
-    const float timeStep = 1.0f / 60.0f;
-    const int32 velocityIterations = 8;
-    const int32 positionIterations = 3;
+    uint update_interval_msec = 5;
+    QImage              *img;
+    QGraphicsPixmapItem *pix;
+    QGraphicsScene      *scn;
 };
 
 #endif // GALTONBOARDVIEW_H

@@ -3,36 +3,8 @@
 
 GaltonBoardView::GaltonBoardView(QObject *parent)
 {
-    // Create a world
-    b2Vec2 gravity(0.0f, -9.8f);
-    world = new b2World(gravity);
-
-    // Create Static Body (Ground)
-    b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -13.0f);
-    b2Body* groundBody = world->CreateBody(&groundBodyDef);
-
-    b2PolygonShape groundBox;
-    groundBox.SetAsBox(50.0f, 10.0f);
-    groundBody->CreateFixture(&groundBox, 0.0f);
-
-    // Create Dynamic Body
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 4.0f);
-    body = world->CreateBody(&bodyDef);
-
-    b2PolygonShape dynamicBox;
-    dynamicBox.SetAsBox(1.0f, 1.0f);
-
-    // Fixture is a glue between body and shape
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
-    fixtureDef.restitution = 0.8f;
-
-    body->CreateFixture(&fixtureDef);
+    // Initialize world with zero gravity
+    gbw = new GaltonBoardWorld(b2Vec2(0.0f, 0.0f));
 
     // Set Scene
     scn = new QGraphicsScene;
@@ -41,20 +13,32 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     scn->addItem(pix);
     setScene(scn);
 
-    connect(&update_timer,  &QTimer::timeout,   this,   &GaltonBoardView::update);
+    // update
     update_timer.start(update_interval_msec);
+    connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::setPixPos);
 }
 
-void GaltonBoardView::update()
+void GaltonBoardView::setPixPos()
 {
-    world->Step(timeStep, velocityIterations, positionIterations);
-    b2Vec2 position = body->GetPosition();
-    pix->setPos(position.x*100, -position.y*100);
+    b2Vec2 pos = gbw->body->GetPosition();
+    pix->setPos(pos.x*100, -pos.y*100);
 }
 
-void GaltonBoardView::button_pushed()
-{
-    body->SetAwake(true);
-    b2Vec2 vel(0.0f, 4.0f);
-    body->SetLinearVelocity(vel);
-}
+///**
+// * attach pixmap on calculated position
+// *
+// * @brief GaltonBoardView::draw
+// */
+//void GaltonBoardView::draw()
+//{
+//    std::vector<b2Vec2> pos_list;
+
+//    for (ball : gbw->ball_list) {
+//        b2Vec2 pos(ball->GetPosition().x, ball->GetPosition().y);
+//        pos_list.push_back(pos);
+//    }
+
+//    for (item : item_list) {
+//        item->setPos(x, y)
+//    }
+//}

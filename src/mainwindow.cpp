@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     gbv = ui->GaltonBoard;
 
-    connect(ui->physicsButton, &QPushButton::released, gbv,     &GaltonBoardView::button_pushed);
+    connect(ui->physicsButton, &QPushButton::clicked, gbv->gbw, &GaltonBoardWorld::button_pushed);
 }
 
 MainWindow::~MainWindow()
