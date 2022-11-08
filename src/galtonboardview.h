@@ -14,7 +14,6 @@ class GaltonBoardView : public QGraphicsView
 {
 public:
     GaltonBoardView(QObject* parent = nullptr);
-    QGraphicsScene *scn;
 
 public slots:
     void button_pushed();
@@ -27,6 +26,7 @@ private:
     b2World *world;
     QImage *img;
     QGraphicsPixmapItem *pix;
+    QGraphicsScene *scn;
 
     QTimer update_timer;
     unsigned int update_interval_msec = 5;

@@ -39,7 +39,7 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     img = new QImage(":/res/ball.png");
     pix = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
     scn->addItem(pix);
-//    setScene(scn);
+    setScene(scn);
 
     connect(&update_timer,  &QTimer::timeout,   this,   &GaltonBoardView::update);
     update_timer.start(update_interval_msec);
