@@ -20,12 +20,13 @@ public:
 public slots:
 
 private:
-    void setPixPos();
+    void SetPixPos();
 
     QTimer update_timer;
     uint update_interval_msec = 5;
     QImage              *img;
-    QGraphicsPixmapItem *pix;
+    QGraphicsPixmapItem *pix1;
+    QGraphicsPixmapItem *pix2;
     QGraphicsScene      *scn;
 };
 

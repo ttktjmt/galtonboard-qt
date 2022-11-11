@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
+#include <QString>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,3 +20,5 @@ MainWindow::~MainWindow()
     delete ui;
     delete gbv;
 }
+
+

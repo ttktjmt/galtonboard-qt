@@ -9,26 +9,25 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     // Set Scene
     scn = new QGraphicsScene;
     img = new QImage(":/res/ball.png");
-    pix = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
-    scn->addItem(pix);
+    pix1 = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
+    pix2 = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
+    scn->addItem(pix1);
+    scn->addItem(pix2);
     setScene(scn);
 
     // update
     update_timer.start(update_interval_msec);
-    connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::setPixPos);
+    connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::SetPixPos);
 }
 
-void GaltonBoardView::setPixPos()
+void GaltonBoardView::SetPixPos()
 {
-    b2Vec2 pos = gbw->body->GetPosition();
-    pix->setPos(pos.x*100, -pos.y*100);
+    b2Vec2 pos1 = gbw->body1->GetPosition();
+    b2Vec2 pos2 = gbw->body2->GetPosition();
+    pix1->setPos(pos1.x*100, -pos1.y*100);
+    pix2->setPos(pos2.x*100, -pos2.y*100);
 }
 
-///**
-// * attach pixmap on calculated position
-// *
-// * @brief GaltonBoardView::draw
-// */
 //void GaltonBoardView::draw()
 //{
 //    std::vector<b2Vec2> pos_list;
