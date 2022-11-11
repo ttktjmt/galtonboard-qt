@@ -38,8 +38,10 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(0.0f, 2.0f);
     bodyDef.allowSleep = false;
-    body1 = this->CreateBody(&bodyDef);
-    body2 = this->CreateBody(&bodyDef);
+    ball = new vector<b2Body*>(bc.ballNum);
+    for(uint i=0; i<bc.ballNum; i++){
+        ball->at(i) = this->CreateBody(&bodyDef);
+    }
 
     b2CircleShape dynamicCircle;
     dynamicCircle.m_p.Set(0.0f, 0.0f);
@@ -55,8 +57,15 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     fixtureDef.friction = 0.001f;
     fixtureDef.restitution = 0.8f;
 
-    body1->CreateFixture(&fixtureDef);
-    body2->CreateFixture(&fixtureDef);
+    for(uint i=0; i<bc.ballNum; i++){
+        ball->at(i)->CreateFixture(&fixtureDef);
+    }
+
+    for(uint i=0; i<bc.ballNum; i++){
+        b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-5);
+        ball->at(i)->SetTransform(b2Vec2(i/1000,i/1000),0.0f);
+        ball->at(i)->SetLinearVelocity(vel);
+    }
 
     update_timer.start(update_interval_msec);
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardWorld::Update);
@@ -74,7 +83,7 @@ void GaltonBoardWorld::UpdateGravity()
         auto acc = Accelerometer->reading();
         if (acc==nullptr) throw 0;
         // ANDROID:(-x,-y), WIN:(x,y)
-        b2Vec2 gravity(acc->x(), acc->y());
+        b2Vec2 gravity(-acc->x(), -acc->y());
         this->SetGravity(gravity);
     }
     catch (...) {
@@ -84,12 +93,10 @@ void GaltonBoardWorld::UpdateGravity()
 
 void GaltonBoardWorld::button_pushed()
 {
-    body1->SetAwake(true);
-    body2->SetAwake(true);
-    b2Vec2 vel1(std::rand()/1000, 0);
-    b2Vec2 vel2(std::rand()/1000, 0);
-    body1->SetLinearVelocity(vel1);
-    body2->SetLinearVelocity(vel2);
+    for(uint i=0; i<bc.ballNum; i++){
+        b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-5);
+        ball->at(i)->SetLinearVelocity(vel);
+    }
 }
 
 

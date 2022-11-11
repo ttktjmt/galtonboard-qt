@@ -6,6 +6,7 @@
 #include <QAccelerometer>
 #include <Box2D/Box2D.h>
 
+#define RAND_MAX 1
 using std::vector;
 
 class GaltonBoardWorld : public b2World, public QObject
@@ -17,12 +18,11 @@ public:
     {   // units: meters-kilogram-second (MKS)
         const float width   = 0.114f;
         const float height  = 0.190f;
-        const int   ballNum = 50;
+        const uint  ballNum = 300;
     }bc;
 
     b2World *world;
-    b2Body *body1;
-    b2Body *body2;
+    vector<b2Body*> *ball;
     const uint ppm = 36; // pixels per meter
 
 private:
@@ -31,7 +31,6 @@ private:
     float PtoM(uint);
     uint MtoP(float);
 
-//    vector<Ball> ball_list;
     QTimer update_timer;
     const uint update_interval_msec = 10;
     QAccelerometer *Accelerometer = nullptr;

@@ -10,6 +10,7 @@
 #include <QWidget>
 #include <Box2D/Box2D.h>
 
+using std::vector;
 
 class GaltonBoardView : public QGraphicsView
 {
@@ -25,8 +26,7 @@ private:
     QTimer update_timer;
     uint update_interval_msec = 5;
     QImage              *img;
-    QGraphicsPixmapItem *pix1;
-    QGraphicsPixmapItem *pix2;
+    vector<QGraphicsPixmapItem*> *ballpix;
     QGraphicsScene      *scn;
 };
 
