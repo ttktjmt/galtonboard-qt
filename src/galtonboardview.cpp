@@ -11,6 +11,7 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     img = new QImage(":/res/ball.png");
     pix1 = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
     pix2 = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
+    pix2->setOpacity(0.3);
     scn->addItem(pix1);
     scn->addItem(pix2);
     setScene(scn);
