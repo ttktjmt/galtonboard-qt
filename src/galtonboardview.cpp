@@ -12,7 +12,12 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     ballpix = new vector<QGraphicsPixmapItem*>(gbw->bc.ballNum);
     for(uint i=0; i<gbw->bc.ballNum; i++){
         ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
-        ballpix->at(i)->setOpacity(i);
+        ballpix->at(i)->setOpacity((float)(i+gbw->bc.ballNum/5)/(gbw->bc.ballNum*6/5));
+        scn->addItem(ballpix->at(i));
+    }
+    framepix = new vector<QGraphicsPixmapItem*>(4);
+    for(uint i=0; i<4; i++){
+        framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
         scn->addItem(ballpix->at(i));
     }
     setScene(scn);
@@ -22,11 +27,23 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::SetPixPos);
 }
 
+void GaltonBoardView::resizeEvent(QResizeEvent *event)
+{
+    qDebug() << "width" << this->width();
+    qDebug() << "height" << this->height();
+    gbw->setFrame(this->width(), this->height());
+}
+
 void GaltonBoardView::SetPixPos()
 {
     for(uint i=0; i<gbw->bc.ballNum; i++){
         b2Vec2 pos = gbw->ball->at(i)->GetPosition();
         ballpix->at(i)->setPos(pos.x*100, -pos.y*100);
+    }
+    for(uint i=0; i<4; i++){
+        b2Vec2 pos = gbw->frame->at(i)->GetPosition();
+        framepix->at(i)->setPos(pos.x*100, -pos.y*100);
+        framepix->at(i)->setScale(3);
     }
 }
 
