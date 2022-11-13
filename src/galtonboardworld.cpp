@@ -14,20 +14,20 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     }
 
     // Create Static Body (Ground)
+    frame = new vector<b2Body*>(4);
     vector<b2BodyDef> groundBodyDef(4);
     groundBodyDef.at(0).position.Set(0.0f, 4.0f);
     groundBodyDef.at(1).position.Set(0.0f, -4.0f);
     groundBodyDef.at(2).position.Set(2.0f, 0.0f);
     groundBodyDef.at(3).position.Set(-2.0f, 0.0f);
-    frame = new vector<b2Body*>(4);
     for(uint i=0; i<4; i++){
         frame->at(i) = this->CreateBody(&groundBodyDef.at(i));
     }
     vector<b2PolygonShape> groundBox(4);
-    groundBox.at(0).SetAsBox(50.0f, 0.1f);
-    groundBox.at(1).SetAsBox(50.0f, 0.1f);
-    groundBox.at(2).SetAsBox(0.1f, 50.0f);
-    groundBox.at(3).SetAsBox(0.1f, 50.0f);
+    groundBox.at(0).SetAsBox(10000.0f, 0.001f);
+    groundBox.at(1).SetAsBox(10000.0f, 0.001f);
+    groundBox.at(2).SetAsBox(0.001f, 10000.0f);
+    groundBox.at(3).SetAsBox(0.001f, 10000.0f);
     for(uint i=0; i<4; i++){
         frame->at(i)->CreateFixture(&groundBox.at(i), 0.0f);
     }
@@ -35,7 +35,7 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     // Create Dynamic Body
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 2.0f);
+    bodyDef.position.Set(0.0f, 0.002f);
     bodyDef.allowSleep = false;
     ball = new vector<b2Body*>(bc.ballNum);
     for(uint i=0; i<bc.ballNum; i++){
@@ -44,7 +44,7 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
 
     b2CircleShape dynamicCircle;
     dynamicCircle.m_p.Set(0.0f, 0.0f);
-    dynamicCircle.m_radius = 0.04f;
+    dynamicCircle.m_radius = 0.002f;
 //    b2PolygonShape dynamicBox;
 //    dynamicBox.SetAsBox(1.0f, 1.0f);
 
@@ -81,7 +81,6 @@ void GaltonBoardWorld::UpdateGravity()
     try {
         auto acc = Accelerometer->reading();
         if (acc==nullptr) throw 0;
-        // ANDROID:(-x,-y), WIN:(x,y)
 #ifdef Q_OS_WIN
         b2Vec2 gravity(acc->x(), acc->y());
 #endif
@@ -105,20 +104,25 @@ void GaltonBoardWorld::button_pushed()
 
 void GaltonBoardWorld::setFrame(float w, float h)
 {
-    frame->at(0)->SetTransform(b2Vec2(0.0f, PtoM(h/2.3)), 0.0f);
-    frame->at(1)->SetTransform(b2Vec2(0.0f, PtoM(-h/2.3)), 0.0f);
-    frame->at(2)->SetTransform(b2Vec2(PtoM(w/2.25), 0.0f), 0.0f);
-    frame->at(3)->SetTransform(b2Vec2(PtoM(-w/2.25), 0.0f), 0.0f);
+    // update ppm
+    ppm['W'] = w/bc.width;  ppm['H'] = h/bc.height;
+    qDebug() << "ppm['W'] :" << ppm['W'] << "ppm['H'] :" << ppm['H'];
+
+    // update frame position
+    float h_offset = h/2-frame_margin_pix['H'];
+    float w_offset = w/2-frame_margin_pix['M'];
+    frame->at(0)->SetTransform(b2Vec2(0.0f,                  PtoM(h_offset,  false)),  0.0f);
+    frame->at(1)->SetTransform(b2Vec2(0.0f,                  PtoM(-h_offset, false)),  0.0f);
+    frame->at(2)->SetTransform(b2Vec2(PtoM(w_offset,  true), 0.0f                  ),  0.0f);
+    frame->at(3)->SetTransform(b2Vec2(PtoM(-w_offset, true), 0.0f                  ),  0.0f);
 }
 
-float GaltonBoardWorld::PtoM(int pixel) // pixels to meters
+float GaltonBoardWorld::PtoM(int pixel, bool is_width) // pixels to meters
 {
-    qDebug() << "pixel :" << pixel;
-    qDebug() << "meter :" << (float)pixel/ppm;
-    return (float)pixel / ppm;
+    if(is_width) return (float)pixel/ppm['W']; else return (float)pixel/ppm['H'];
 }
 
-int GaltonBoardWorld::MtoP(float meter) // meters to pixels
+int GaltonBoardWorld::MtoP(float meter, bool is_width) // meters to pixels
 {
-    return meter * ppm;
+    if(is_width) return meter*ppm['W']; else return meter*ppm['H'];
 }

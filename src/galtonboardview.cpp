@@ -18,7 +18,7 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     framepix = new vector<QGraphicsPixmapItem*>(4);
     for(uint i=0; i<4; i++){
         framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
-        scn->addItem(ballpix->at(i));
+//        scn->addItem(framepix->at(i));
     }
     setScene(scn);
 
@@ -29,8 +29,7 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
 
 void GaltonBoardView::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "width" << this->width();
-    qDebug() << "height" << this->height();
+    qDebug() << "<<RESIZED>>\n" << "width" << this->width() << "\nheight" << this->height();
     gbw->setFrame(this->width(), this->height());
 }
 
@@ -38,11 +37,11 @@ void GaltonBoardView::SetPixPos()
 {
     for(uint i=0; i<gbw->bc.ballNum; i++){
         b2Vec2 pos = gbw->ball->at(i)->GetPosition();
-        ballpix->at(i)->setPos(pos.x*100, -pos.y*100);
+        ballpix->at(i)->setPos(gbw->MtoP(pos.x, true), gbw->MtoP(-pos.y, false));
     }
     for(uint i=0; i<4; i++){
         b2Vec2 pos = gbw->frame->at(i)->GetPosition();
-        framepix->at(i)->setPos(pos.x*100, -pos.y*100);
+        framepix->at(i)->setPos(gbw->MtoP(pos.x, true), gbw->MtoP(-pos.y, false));
         framepix->at(i)->setScale(3);
     }
 }
