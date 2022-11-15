@@ -23,7 +23,7 @@ public:
     vector<b2Body*> *frame;
     vector<b2Body*> *ball;
     /// TODO: make ppm value responsive
-    float ppm = 0;
+    float ppm = -1;
 
 private:
     void Update();
@@ -32,13 +32,7 @@ private:
     Config cfg;
     QTimer update_timer;
     const uint update_interval_msec = 5;
-
     QAccelerometer *Accelerometer = nullptr;
-    const float g_scale = (float)1/6;
-
-    const float timeStep = 1.0f / 60.0f;
-    const int32 velocityIterations = 8;
-    const int32 positionIterations = 3;
 
 public slots:
     void button_pushed();

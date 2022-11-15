@@ -12,6 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     gbv = ui->GaltonBoard;
 
+#ifdef Q_OS_WIN
+    qDebug("WINDOWS");
+    this->resize(380, 780);
+#endif
+#ifdef Q_OS_ANDROID
+    qDebug("ANDROID");
+#endif
+    
     connect(ui->physicsButton, &QPushButton::clicked, gbv->gbw, &GaltonBoardWorld::button_pushed);
 }
 

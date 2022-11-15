@@ -73,7 +73,7 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
 
 void GaltonBoardWorld::Update()
 {
-    this->Step(timeStep, velocityIterations, positionIterations);
+    this->Step(cfg.timeStep, cfg.velocityIterations, cfg.positionIterations);
 }
 
 void GaltonBoardWorld::UpdateGravity()
@@ -81,10 +81,10 @@ void GaltonBoardWorld::UpdateGravity()
     auto acc = Accelerometer->reading();
     if (acc != nullptr){
 #ifdef Q_OS_WIN
-        b2Vec2 gravity(acc->x()*g_scale, acc->y()*g_scale);
+        b2Vec2 gravity(acc->x()*cfg.g_scale, acc->y()*cfg.g_scale);
 #endif
 #ifdef Q_OS_ANDROID
-        b2Vec2 gravity(-acc->x()*g_scale, -acc->y()*g_scale);
+        b2Vec2 gravity(-acc->x()*cfg.g_scale, -acc->y()*cfg.g_scale);
 #endif
         this->SetGravity(gravity);
     } else {
@@ -102,8 +102,15 @@ void GaltonBoardWorld::button_pushed()
 
 void GaltonBoardWorld::setFrame(float w, float h)
 {
-    /// TODO: make it responsive
-    if (ppm == 0/*initial*/) ppm = w/cfg.frame_w;
+    /// TODO: make ppm responsive
+    qDebug() << "w/cfg.frame_w :" << w/cfg.frame_w;
+#ifdef Q_OS_WIN
+    if (ppm == -1/*initial*/)     ppm = w/cfg.frame_w;
+#endif
+#ifdef Q_OS_ANDROID // graphicsview is resized twice on android
+    if (ppm == -1/*initial*/)     ppm = -2;
+    else if (ppm == -2/*second*/) ppm = w/cfg.frame_w;
+#endif
 
     // update frame position
     float h_offset = h/2-cfg.frame_margin_pix['h'];
