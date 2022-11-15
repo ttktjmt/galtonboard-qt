@@ -2,6 +2,7 @@
 #define GALTONBOARDVIEW_H
 
 #include "galtonboardworld.h"
+#include "config.h"
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -17,16 +18,18 @@ class GaltonBoardView : public QGraphicsView
 public:
     GaltonBoardView(QObject* parent = nullptr);
     GaltonBoardWorld    *gbw;
-
-public slots:
+    Config cfg;
 
 private:
     void SetPixPos();
+    void resizeEvent(QResizeEvent*);
 
     QTimer update_timer;
     uint update_interval_msec = 5;
-    QImage              *img;
+    QImage              *ballimg;
+    float ballpos_offset;
     vector<QGraphicsPixmapItem*> *ballpix;
+    vector<QGraphicsPixmapItem*> *framepix;
     QGraphicsScene      *scn;
 };
 

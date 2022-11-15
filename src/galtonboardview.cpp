@@ -8,12 +8,19 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
 
     // Set Scene
     scn = new QGraphicsScene;
-    img = new QImage(":/res/ball.png");
-    ballpix = new vector<QGraphicsPixmapItem*>(gbw->bc.ballNum);
-    for(uint i=0; i<gbw->bc.ballNum; i++){
-        ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*img));
-        ballpix->at(i)->setOpacity(i);
+    ballimg = new QImage(":/res/ball.png");
+    ballpix = new vector<QGraphicsPixmapItem*>(cfg.ballNum);
+    for(uint i=0; i<cfg.ballNum; i++){
+        ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
+        ballpix->at(i)->setOpacity((float)(i+cfg.ballNum/8)/(cfg.ballNum*9/8));
+        ballpix->at(i)->hide();
         scn->addItem(ballpix->at(i));
+    }
+    framepix = new vector<QGraphicsPixmapItem*>(4);
+    for(uint i=0; i<4; i++){
+        framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
+        framepix->at(i)->setOpacity(0.05);
+        scn->addItem(framepix->at(i));
     }
     setScene(scn);
 
@@ -22,24 +29,35 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::SetPixPos);
 }
 
-void GaltonBoardView::SetPixPos()
+void GaltonBoardView::resizeEvent(QResizeEvent *event)
 {
-    for(uint i=0; i<gbw->bc.ballNum; i++){
-        b2Vec2 pos = gbw->ball->at(i)->GetPosition();
-        ballpix->at(i)->setPos(pos.x*100, -pos.y*100);
+    qDebug() << "<<RESIZED>>\n" << "width" << this->width() << "\nheight" << this->height();
+    float scn_w  = (float)this->width()/2  - cfg.frame_margin_pix['w'];
+    float scn_h  = (float)this->height()/2 - cfg.frame_margin_pix['h'];
+    scn->setSceneRect(-scn_w, -scn_h, 2*scn_w, 2*scn_h);
+    gbw->setFrame(this->width(), this->height());
+
+    // resize ball after updating ppm
+    int ballimg_r = ballimg->size().width()/2;
+    float ball_scale = cfg.ball_r / gbw->PtoM(ballimg_r);
+    ballpos_offset = ball_scale * ballimg_r;
+    for(uint i=0; i<cfg.ballNum; i++){
+        ballpix->at(i)->setScale(ball_scale);
+    }
+    for(uint i=0; i<4; i++){
+        framepix->at(i)->setScale(ball_scale);
     }
 }
 
-//void GaltonBoardView::draw()
-//{
-//    std::vector<b2Vec2> pos_list;
-
-//    for (ball : gbw->ball_list) {
-//        b2Vec2 pos(ball->GetPosition().x, ball->GetPosition().y);
-//        pos_list.push_back(pos);
-//    }
-
-//    for (item : item_list) {
-//        item->setPos(x, y)
-//    }
-//}
+void GaltonBoardView::SetPixPos()
+{
+    for(uint i=0; i<gbw->ball->size(); i++){
+        if (!ballpix->at(i)->isVisible()) ballpix->at(i)->show();
+        b2Vec2 pos = gbw->ball->at(i)->GetPosition();
+        ballpix->at(i)->setPos(gbw->MtoP(pos.x)-ballpos_offset, gbw->MtoP(-pos.y)-ballpos_offset);
+    }
+    for(uint i=0; i<4; i++){
+        b2Vec2 pos = gbw->frame->at(i)->GetPosition();
+        framepix->at(i)->setPos(gbw->MtoP(pos.x)-ballpos_offset, gbw->MtoP(-pos.y)-ballpos_offset);
+    }
+}

@@ -1,43 +1,45 @@
 #ifndef GALTONBOARDWORLD_H
 #define GALTONBOARDWORLD_H
 
+#include "config.h"
+
 #include <QObject>
 #include <QTimer>
 #include <QAccelerometer>
 #include <Box2D/Box2D.h>
+#include <map>
 
-#define RAND_MAX 1
 using std::vector;
 
 class GaltonBoardWorld : public b2World, public QObject
 {
 public:
     GaltonBoardWorld(b2Vec2);
-
-    struct BoardConfig
-    {   // units: meters-kilogram-second (MKS)
-        const float width   = 0.114f;
-        const float height  = 0.190f;
-        const uint  ballNum = 300;
-    }bc;
+    void setFrame(float, float);
+    float PtoM(float);
+    float MtoP(float);
 
     b2World *world;
+    vector<b2Body*> *frame;
     vector<b2Body*> *ball;
-    const uint ppm = 36; // pixels per meter
+    /// TODO: make ppm responsive
+    float ppm = -1;
 
 private:
     void Update();
     void UpdateGravity();
-    float PtoM(uint);
-    uint MtoP(float);
+    void AddBall();
 
+    Config cfg;
     QTimer update_timer;
-    const uint update_interval_msec = 10;
+    QTimer add_timer;
+    const uint update_interval_msec = 5;
+    const uint add_interval_msec = 3;
     QAccelerometer *Accelerometer = nullptr;
 
-    const float timeStep = 1.0f / 60.0f;
-    const int32 velocityIterations = 8;
-    const int32 positionIterations = 3;
+    b2BodyDef    ball_def;
+    b2CircleShape ball_shape;
+    b2FixtureDef ball_fixdef;
 
 public slots:
     void button_pushed();
