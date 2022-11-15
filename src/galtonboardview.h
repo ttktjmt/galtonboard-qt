@@ -2,6 +2,7 @@
 #define GALTONBOARDVIEW_H
 
 #include "galtonboardworld.h"
+#include "config.h"
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -17,6 +18,7 @@ class GaltonBoardView : public QGraphicsView
 public:
     GaltonBoardView(QObject* parent = nullptr);
     GaltonBoardWorld    *gbw;
+    Config cfg;
 
 public slots:
 

@@ -107,6 +107,7 @@ HEADERS += \
     Box2D/Dynamics/b2World.h \
     Box2D/Dynamics/b2WorldCallbacks.h \
     Box2D/Rope/b2Rope.h \
+    config.h \
     galtonboardview.h \
     galtonboardworld.h \
     mainwindow.h

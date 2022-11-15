@@ -1,6 +1,8 @@
 #ifndef GALTONBOARDWORLD_H
 #define GALTONBOARDWORLD_H
 
+#include "config.h"
+
 #include <QObject>
 #include <QTimer>
 #include <QAccelerometer>
@@ -17,16 +19,6 @@ public:
     float PtoM(float);
     float MtoP(float);
 
-    struct BoardConfig
-    {   // units: meters-kilogram-second (MKS)
-        const float scale   = 100;
-        const float width   = 0.114f * scale;
-        const float height  = 0.190f * scale;
-        std::map<char, int> frame_margin_pix = {{'W', 75}, {'H', 10}};
-        const uint  ballNum = 100;
-        const float radius  = 0.0012f * scale;
-    }bc;
-
     b2World *world;
     vector<b2Body*> *frame;
     vector<b2Body*> *ball;
@@ -37,8 +29,9 @@ private:
     void Update();
     void UpdateGravity();
 
+    Config cfg;
     QTimer update_timer;
-    const uint update_interval_msec = 10;
+    const uint update_interval_msec = 5;
 
     QAccelerometer *Accelerometer = nullptr;
     const float g_scale = (float)1/6;

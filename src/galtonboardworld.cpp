@@ -37,14 +37,14 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(0.0f, 0.002f);
     bodyDef.allowSleep = false;
-    ball = new vector<b2Body*>(bc.ballNum);
-    for(uint i=0; i<bc.ballNum; i++){
+    ball = new vector<b2Body*>(cfg.ballNum);
+    for(uint i=0; i<cfg.ballNum; i++){
         ball->at(i) = this->CreateBody(&bodyDef);
     }
 
     b2CircleShape dynamicCircle;
     dynamicCircle.m_p.Set(0.0f, 0.0f);
-    dynamicCircle.m_radius = bc.radius;
+    dynamicCircle.m_radius = cfg.ball_r;
     //    b2PolygonShape dynamicBox;
     //    dynamicBox.SetAsBox(1.0f, 1.0f);
 
@@ -56,11 +56,11 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
     fixtureDef.friction = 0.001f;
     fixtureDef.restitution = 0.2f;
 
-    for(uint i=0; i<bc.ballNum; i++){
+    for(uint i=0; i<cfg.ballNum; i++){
         ball->at(i)->CreateFixture(&fixtureDef);
     }
 
-    for(uint i=0; i<bc.ballNum; i++){
+    for(uint i=0; i<cfg.ballNum; i++){
         b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-5);
         ball->at(i)->SetTransform(b2Vec2(i/1000,i/1000),0.0f);
         ball->at(i)->SetLinearVelocity(vel);
@@ -94,7 +94,7 @@ void GaltonBoardWorld::UpdateGravity()
 
 void GaltonBoardWorld::button_pushed()
 {
-    for(uint i=0; i<bc.ballNum; i++){
+    for(uint i=0; i<cfg.ballNum; i++){
         b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-3);
         ball->at(i)->SetLinearVelocity(vel);
     }
@@ -103,11 +103,11 @@ void GaltonBoardWorld::button_pushed()
 void GaltonBoardWorld::setFrame(float w, float h)
 {
     /// TODO: make it responsive
-    if (ppm == 0/*initial*/) ppm = w/bc.width;
+    if (ppm == 0/*initial*/) ppm = w/cfg.frame_w;
 
     // update frame position
-    float h_offset = h/2-bc.frame_margin_pix['H'];
-    float w_offset = w/2-bc.frame_margin_pix['M'];
+    float h_offset = h/2-cfg.frame_margin_pix['h'];
+    float w_offset = w/2-cfg.frame_margin_pix['w'];
     frame->at(0)->SetTransform(b2Vec2(0.0f,            PtoM( h_offset)), 0.0f);
     frame->at(1)->SetTransform(b2Vec2(0.0f,            PtoM(-h_offset)), 0.0f);
     frame->at(2)->SetTransform(b2Vec2(PtoM( w_offset), 0.0f           ), 0.0f);
