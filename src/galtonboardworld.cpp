@@ -44,14 +44,14 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
 
     b2CircleShape dynamicCircle;
     dynamicCircle.m_p.Set(0.0f, 0.0f);
-    dynamicCircle.m_radius = 0.002f;
-//    b2PolygonShape dynamicBox;
-//    dynamicBox.SetAsBox(1.0f, 1.0f);
+    dynamicCircle.m_radius = bc.radius;
+    //    b2PolygonShape dynamicBox;
+    //    dynamicBox.SetAsBox(1.0f, 1.0f);
 
     // Fixture is a glue between body and shape
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicCircle;
-//    fixtureDef.shape = &dynamicBox;
+    //    fixtureDef.shape = &dynamicBox;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.001f;
     fixtureDef.restitution = 0.2f;
@@ -78,18 +78,16 @@ void GaltonBoardWorld::Update()
 
 void GaltonBoardWorld::UpdateGravity()
 {
-    try {
-        auto acc = Accelerometer->reading();
-        if (acc==nullptr) throw 0;
+    auto acc = Accelerometer->reading();
+    if (acc != nullptr){
 #ifdef Q_OS_WIN
-        b2Vec2 gravity(acc->x(), acc->y());
+        b2Vec2 gravity(acc->x()*g_scale, acc->y()*g_scale);
 #endif
 #ifdef Q_OS_ANDROID
-        b2Vec2 gravity(-acc->x(), -acc->y());
+        b2Vec2 gravity(-acc->x()*g_scale, -acc->y()*g_scale);
 #endif
         this->SetGravity(gravity);
-    }
-    catch (...) {
+    } else {
         qDebug("Access Denied: Accelerometer");
     }
 }
@@ -104,25 +102,24 @@ void GaltonBoardWorld::button_pushed()
 
 void GaltonBoardWorld::setFrame(float w, float h)
 {
-    // update ppm
-    ppm['W'] = w/bc.width;  ppm['H'] = h/bc.height;
-    qDebug() << "ppm['W'] :" << ppm['W'] << "ppm['H'] :" << ppm['H'];
+    /// TODO: make it responsive
+    if (ppm == 0/*initial*/) ppm = w/bc.width;
 
     // update frame position
-    float h_offset = h/2-frame_margin_pix['H'];
-    float w_offset = w/2-frame_margin_pix['M'];
-    frame->at(0)->SetTransform(b2Vec2(0.0f,                  PtoM(h_offset,  false)),  0.0f);
-    frame->at(1)->SetTransform(b2Vec2(0.0f,                  PtoM(-h_offset, false)),  0.0f);
-    frame->at(2)->SetTransform(b2Vec2(PtoM(w_offset,  true), 0.0f                  ),  0.0f);
-    frame->at(3)->SetTransform(b2Vec2(PtoM(-w_offset, true), 0.0f                  ),  0.0f);
+    float h_offset = h/2-bc.frame_margin_pix['H'];
+    float w_offset = w/2-bc.frame_margin_pix['M'];
+    frame->at(0)->SetTransform(b2Vec2(0.0f,            PtoM( h_offset)), 0.0f);
+    frame->at(1)->SetTransform(b2Vec2(0.0f,            PtoM(-h_offset)), 0.0f);
+    frame->at(2)->SetTransform(b2Vec2(PtoM( w_offset), 0.0f           ), 0.0f);
+    frame->at(3)->SetTransform(b2Vec2(PtoM(-w_offset), 0.0f           ), 0.0f);
 }
 
-float GaltonBoardWorld::PtoM(int pixel, bool is_width) // pixels to meters
+float GaltonBoardWorld::PtoM(float pixel)
 {
-    if(is_width) return (float)pixel/ppm['W']; else return (float)pixel/ppm['H'];
+    if (ppm!=0) return pixel/ppm; else qDebug("Error: ppm==0"); return -1;
 }
 
-int GaltonBoardWorld::MtoP(float meter, bool is_width) // meters to pixels
+float GaltonBoardWorld::MtoP(float meter)
 {
-    if(is_width) return meter*ppm['W']; else return meter*ppm['H'];
+    if (ppm!=0) return meter*ppm; else qDebug("Error: ppm==0"); return -1;
 }

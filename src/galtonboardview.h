@@ -26,7 +26,7 @@ private:
 
     QTimer update_timer;
     uint update_interval_msec = 5;
-    QImage              *img;
+    QImage              *ballimg;
     vector<QGraphicsPixmapItem*> *ballpix;
     vector<QGraphicsPixmapItem*> *framepix;
     QGraphicsScene      *scn;
