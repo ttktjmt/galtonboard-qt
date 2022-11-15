@@ -20,8 +20,6 @@ public:
     GaltonBoardWorld    *gbw;
     Config cfg;
 
-public slots:
-
 private:
     void SetPixPos();
     void resizeEvent(QResizeEvent*);

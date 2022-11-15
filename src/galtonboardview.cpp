@@ -13,12 +13,13 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     for(uint i=0; i<cfg.ballNum; i++){
         ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
         ballpix->at(i)->setOpacity((float)(i+cfg.ballNum/8)/(cfg.ballNum*9/8));
+        ballpix->at(i)->hide();
         scn->addItem(ballpix->at(i));
     }
     framepix = new vector<QGraphicsPixmapItem*>(4);
     for(uint i=0; i<4; i++){
         framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
-        framepix->at(i)->setOpacity(0.1);
+        framepix->at(i)->setOpacity(0.05);
         scn->addItem(framepix->at(i));
     }
     setScene(scn);
@@ -31,8 +32,8 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
 void GaltonBoardView::resizeEvent(QResizeEvent *event)
 {
     qDebug() << "<<RESIZED>>\n" << "width" << this->width() << "\nheight" << this->height();
-    float scn_w  = (float)this->width()/2  - (float)cfg.frame_margin_pix['w'];
-    float scn_h  = (float)this->height()/2 - (float)cfg.frame_margin_pix['h'];
+    float scn_w  = (float)this->width()/2  - cfg.frame_margin_pix['w'];
+    float scn_h  = (float)this->height()/2 - cfg.frame_margin_pix['h'];
     scn->setSceneRect(-scn_w, -scn_h, 2*scn_w, 2*scn_h);
     gbw->setFrame(this->width(), this->height());
 
@@ -50,7 +51,8 @@ void GaltonBoardView::resizeEvent(QResizeEvent *event)
 
 void GaltonBoardView::SetPixPos()
 {
-    for(uint i=0; i<cfg.ballNum; i++){
+    for(uint i=0; i<gbw->ball->size(); i++){
+        if (!ballpix->at(i)->isVisible()) ballpix->at(i)->show();
         b2Vec2 pos = gbw->ball->at(i)->GetPosition();
         ballpix->at(i)->setPos(gbw->MtoP(pos.x)-ballpos_offset, gbw->MtoP(-pos.y)-ballpos_offset);
     }

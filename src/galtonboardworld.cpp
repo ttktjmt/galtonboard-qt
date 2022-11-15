@@ -13,7 +13,7 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
         qDebug("Access Denied: Accelerometer");
     }
 
-    // Create Static Body (Ground)
+    // Create Frame
     frame = new vector<b2Body*>(4);
     vector<b2BodyDef> groundBodyDef(4);
     groundBodyDef.at(0).position.Set(0.0f, 4.0f);
@@ -32,43 +32,24 @@ GaltonBoardWorld::GaltonBoardWorld(b2Vec2 g) : b2World(g)
         frame->at(i)->CreateFixture(&groundBox.at(i), 0.0f);
     }
 
-    // Create Dynamic Body
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 0.002f);
-    bodyDef.allowSleep = false;
-    ball = new vector<b2Body*>(cfg.ballNum);
-    for(uint i=0; i<cfg.ballNum; i++){
-        ball->at(i) = this->CreateBody(&bodyDef);
-    }
-
-    b2CircleShape dynamicCircle;
-    dynamicCircle.m_p.Set(0.0f, 0.0f);
-    dynamicCircle.m_radius = cfg.ball_r;
-    //    b2PolygonShape dynamicBox;
-    //    dynamicBox.SetAsBox(1.0f, 1.0f);
-
-    // Fixture is a glue between body and shape
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicCircle;
-    //    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.001f;
-    fixtureDef.restitution = 0.2f;
-
-    for(uint i=0; i<cfg.ballNum; i++){
-        ball->at(i)->CreateFixture(&fixtureDef);
-    }
-
-    for(uint i=0; i<cfg.ballNum; i++){
-        b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-5);
-        ball->at(i)->SetTransform(b2Vec2(i/1000,i/1000),0.0f);
-        ball->at(i)->SetLinearVelocity(vel);
-    }
+    // Create Ball Body
+    ball_def.type = b2_dynamicBody;
+    ball_def.position.Set(0.0f, 0.0f);
+    ball_def.allowSleep = false;
+    ball = new vector<b2Body*>;
+    // Create Ball Shape & Fixture
+    ball_shape.m_p.Set(0.0f, 0.0f);
+    ball_shape.m_radius = cfg.ball_r;
+    ball_fixdef.shape = &ball_shape;
+    ball_fixdef.density = 1.0f;
+    ball_fixdef.friction = 0.001f;
+    ball_fixdef.restitution = 0.2f;
 
     update_timer.start(update_interval_msec);
+    add_timer.start(add_interval_msec);
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardWorld::Update);
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardWorld::UpdateGravity);
+    connect(&add_timer,    &QTimer::timeout, this, &GaltonBoardWorld::AddBall);
 }
 
 void GaltonBoardWorld::Update()
@@ -92,10 +73,20 @@ void GaltonBoardWorld::UpdateGravity()
     }
 }
 
+void GaltonBoardWorld::AddBall()
+{
+    ball->push_back(this->CreateBody(&ball_def));
+    ball->back()->CreateFixture(&ball_fixdef);
+    ball->back()->SetTransform(b2Vec2(0,0), 0.0f);
+    ball->back()->SetLinearVelocity(b2Vec2(((float)std::rand()/RAND_MAX)-0.5f, ((float)std::rand()/RAND_MAX)*4-2));
+
+    if (ball->size()>=cfg.ballNum) add_timer.stop();
+}
+
 void GaltonBoardWorld::button_pushed()
 {
     for(uint i=0; i<cfg.ballNum; i++){
-        b2Vec2 vel(std::rand()%100/10-5/*[-5,5]*/, std::rand()%100/10-3);
+        b2Vec2 vel(((float)std::rand()/RAND_MAX)*2-1, ((float)std::rand()/RAND_MAX)*2-1);
         ball->at(i)->SetLinearVelocity(vel);
     }
 }

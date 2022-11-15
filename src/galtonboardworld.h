@@ -22,17 +22,24 @@ public:
     b2World *world;
     vector<b2Body*> *frame;
     vector<b2Body*> *ball;
-    /// TODO: make ppm value responsive
+    /// TODO: make ppm responsive
     float ppm = -1;
 
 private:
     void Update();
     void UpdateGravity();
+    void AddBall();
 
     Config cfg;
     QTimer update_timer;
+    QTimer add_timer;
     const uint update_interval_msec = 5;
+    const uint add_interval_msec = 3;
     QAccelerometer *Accelerometer = nullptr;
+
+    b2BodyDef    ball_def;
+    b2CircleShape ball_shape;
+    b2FixtureDef ball_fixdef;
 
 public slots:
     void button_pushed();
