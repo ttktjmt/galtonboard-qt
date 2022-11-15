@@ -17,20 +17,24 @@ class GaltonBoardView : public QGraphicsView
 {
 public:
     GaltonBoardView(QObject* parent = nullptr);
-    GaltonBoardWorld    *gbw;
+    GaltonBoardWorld *gbw;
     Config cfg;
 
 private:
     void SetPixPos();
     void resizeEvent(QResizeEvent*);
 
+    /// TODO: delete all instances in the destructor (and free heap memory)
     QTimer update_timer;
     uint update_interval_msec = 5;
-    QImage              *ballimg;
+    QImage *ballimg;
     float ballpos_offset;
     vector<QGraphicsPixmapItem*> *ballpix;
     vector<QGraphicsPixmapItem*> *framepix;
-    QGraphicsScene      *scn;
+    QGraphicsScene *scn;
+
+public slots:
+    void ResetScene();
 };
 
 #endif // GALTONBOARDVIEW_H

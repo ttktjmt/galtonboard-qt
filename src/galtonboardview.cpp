@@ -49,6 +49,29 @@ void GaltonBoardView::resizeEvent(QResizeEvent *event)
     }
 }
 
+void GaltonBoardView::ResetScene()
+{
+    /// TODO: getting slower so clear some data
+    gbw = new GaltonBoardWorld(b2Vec2(0.0f, 0.0f));
+    scn = new QGraphicsScene;
+
+    ballpix = new vector<QGraphicsPixmapItem*>(cfg.ballNum);
+    for(uint i=0; i<cfg.ballNum; i++){
+        ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
+        ballpix->at(i)->setOpacity((float)(i+cfg.ballNum/8)/(cfg.ballNum*9/8));
+        ballpix->at(i)->hide();
+        scn->addItem(ballpix->at(i));
+    }
+    framepix = new vector<QGraphicsPixmapItem*>(4);
+    for(uint i=0; i<4; i++){
+        framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
+        framepix->at(i)->setOpacity(0.05);
+        scn->addItem(framepix->at(i));
+    }
+    setScene(scn);
+    resizeEvent(nullptr);
+}
+
 void GaltonBoardView::SetPixPos()
 {
     for(uint i=0; i<gbw->ball->size(); i++){

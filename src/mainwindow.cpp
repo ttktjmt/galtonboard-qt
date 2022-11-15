@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug("ANDROID");
 #endif
     
-    connect(ui->physicsButton, &QPushButton::clicked, gbv->gbw, &GaltonBoardWorld::button_pushed);
+//    connect(ui->physicsButton, &QPushButton::clicked, gbv->gbw, &GaltonBoardWorld::button_pushed);
+    connect(ui->physicsButton, &QPushButton::released, gbv, &GaltonBoardView::ResetScene);
 }
 
 MainWindow::~MainWindow()
@@ -28,5 +29,3 @@ MainWindow::~MainWindow()
     delete ui;
     delete gbv;
 }
-
-
