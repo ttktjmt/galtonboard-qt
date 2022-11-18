@@ -10,14 +10,14 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     scn = new QGraphicsScene;
     ballimg = new QImage(":/res/ball.png");
     ballpix = new vector<QGraphicsPixmapItem*>(cfg.ballNum);
-    for(uint i=0; i<cfg.ballNum; i++){
+    for(uint i=0; i<ballpix->size(); i++){
         ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
         ballpix->at(i)->setOpacity((float)(i+cfg.ballNum/8)/(cfg.ballNum*9/8));
         ballpix->at(i)->hide();
         scn->addItem(ballpix->at(i));
     }
     framepix = new vector<QGraphicsPixmapItem*>(4);
-    for(uint i=0; i<4; i++){
+    for(uint i=0; i<framepix->size(); i++){
         framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
         framepix->at(i)->setOpacity(0.05);
         scn->addItem(framepix->at(i));
@@ -27,6 +27,15 @@ GaltonBoardView::GaltonBoardView(QObject *parent)
     // update
     update_timer.start(update_interval_msec);
     connect(&update_timer, &QTimer::timeout, this, &GaltonBoardView::SetPixPos);
+}
+
+GaltonBoardView::~GaltonBoardView()
+{
+    delete gbw;
+    delete ballimg;
+    delete ballpix;
+    delete framepix;
+    delete scn;
 }
 
 void GaltonBoardView::resizeEvent(QResizeEvent *event)
@@ -41,33 +50,28 @@ void GaltonBoardView::resizeEvent(QResizeEvent *event)
     int ballimg_r = ballimg->size().width()/2;
     float ball_scale = cfg.ball_r / gbw->PtoM(ballimg_r);
     ballpos_offset = ball_scale * ballimg_r;
-    for(uint i=0; i<cfg.ballNum; i++){
+    for(uint i=0; i<ballpix->size(); i++){
         ballpix->at(i)->setScale(ball_scale);
     }
-    for(uint i=0; i<4; i++){
+    for(uint i=0; i<framepix->size(); i++){
         framepix->at(i)->setScale(ball_scale);
     }
 }
 
-void GaltonBoardView::ResetScene()
+void GaltonBoardView::ResetScnWld()
 {
-    /// TODO: getting slower so clear some data
+    /// TODO: getting slower so clear data (destruct GaltonBoardWorld instance properly)
     gbw = new GaltonBoardWorld(b2Vec2(0.0f, 0.0f));
     scn = new QGraphicsScene;
 
     ballpix = new vector<QGraphicsPixmapItem*>(cfg.ballNum);
-    for(uint i=0; i<cfg.ballNum; i++){
+    for(uint i=0; i<ballpix->size(); i++){
         ballpix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
         ballpix->at(i)->setOpacity((float)(i+cfg.ballNum/8)/(cfg.ballNum*9/8));
         ballpix->at(i)->hide();
         scn->addItem(ballpix->at(i));
     }
-    framepix = new vector<QGraphicsPixmapItem*>(4);
-    for(uint i=0; i<4; i++){
-        framepix->at(i) = new QGraphicsPixmapItem(QPixmap::fromImage(*ballimg));
-        framepix->at(i)->setOpacity(0.05);
-        scn->addItem(framepix->at(i));
-    }
+
     setScene(scn);
     resizeEvent(nullptr);
 }

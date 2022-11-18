@@ -15,8 +15,11 @@ public:
     const float frame_h = 0.190f * scale;
     std::map<char, int> frame_margin_pix = {{'w', 5}, {'h', 5}};
 
+    // pin
+    const float pin_r   = 0.0012f * scale;
+
     // ball
-    const uint ballNum  = 200;
+    const uint ballNum  = 300;
     const float ball_r  = 0.0022f * scale;
 
     // gravity

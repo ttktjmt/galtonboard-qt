@@ -17,6 +17,7 @@ class GaltonBoardView : public QGraphicsView
 {
 public:
     GaltonBoardView(QObject* parent = nullptr);
+    ~GaltonBoardView() override;
     GaltonBoardWorld *gbw;
     Config cfg;
 
@@ -24,7 +25,6 @@ private:
     void SetPixPos();
     void resizeEvent(QResizeEvent*);
 
-    /// TODO: delete all instances in the destructor (and free heap memory)
     QTimer update_timer;
     uint update_interval_msec = 5;
     QImage *ballimg;
@@ -34,7 +34,7 @@ private:
     QGraphicsScene *scn;
 
 public slots:
-    void ResetScene();
+    void ResetScnWld();
 };
 
 #endif // GALTONBOARDVIEW_H
