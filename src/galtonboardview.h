@@ -28,9 +28,11 @@ private:
     QTimer update_timer;
     uint update_interval_msec = 5;
     QImage *ballimg;
-    float ballpos_offset;
-    vector<QGraphicsPixmapItem*> *ballpix;
+    QImage *pinimg;
+    float ballpos_offset, pinpos_offset;
     vector<QGraphicsPixmapItem*> *framepix;
+    vector<QGraphicsPixmapItem*> *pinpix;
+    vector<QGraphicsPixmapItem*> *ballpix;
     QGraphicsScene *scn;
 
 public slots:

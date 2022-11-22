@@ -22,6 +22,7 @@ public:
 
     b2World *world;
     vector<b2Body*> *frame;
+    vector<b2Body*> *fence;
     vector<b2Body*> *pin;
     vector<b2Body*> *ball;
     /// TODO: make ppm responsive
@@ -36,7 +37,7 @@ private:
     QTimer update_timer;
     QTimer add_timer;
     const uint update_interval_msec = 5;
-    const uint add_interval_msec = 1;
+    const uint add_interval_msec = 200;
     QAccelerometer *Accelerometer = nullptr;
 
     b2BodyDef     ball_def;
