@@ -17,7 +17,8 @@ class GaltonBoardView : public QGraphicsView
 {
 public:
     GaltonBoardView(QObject* parent = nullptr);
-    GaltonBoardWorld    *gbw;
+    ~GaltonBoardView() override;
+    GaltonBoardWorld *gbw;
     Config cfg;
 
 private:
@@ -26,11 +27,16 @@ private:
 
     QTimer update_timer;
     uint update_interval_msec = 5;
-    QImage              *ballimg;
-    float ballpos_offset;
-    vector<QGraphicsPixmapItem*> *ballpix;
+    QImage *ballimg;
+    QImage *pinimg;
+    float ballpos_offset, pinpos_offset;
     vector<QGraphicsPixmapItem*> *framepix;
-    QGraphicsScene      *scn;
+    vector<QGraphicsPixmapItem*> *pinpix;
+    vector<QGraphicsPixmapItem*> *ballpix;
+    QGraphicsScene *scn;
+
+public slots:
+    void ResetScnWld();
 };
 
 #endif // GALTONBOARDVIEW_H

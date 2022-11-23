@@ -20,9 +20,10 @@ public:
     ~MainWindow();
     void SetWindowSize();
 
+    GaltonBoardView *gbv;
+
 private:
     Ui::MainWindow  *ui;
-    GaltonBoardView *gbv;
 };
 
 #endif // MAINWINDOW_H

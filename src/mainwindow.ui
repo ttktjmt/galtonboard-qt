@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>500</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -44,23 +47,33 @@
         <property name="minimumSize">
          <size>
           <width>50</width>
-          <height>25</height>
+          <height>50</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>100</width>
-          <height>20</height>
+          <height>100</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>24</pointsize>
+          <pointsize>16</pointsize>
           <bold>false</bold>
          </font>
         </property>
         <property name="text">
-         <string>▷</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="resource.qrc">
+          <normaloff>:/res/refresh.png</normaloff>:/res/refresh.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -73,7 +86,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>500</width>
      <height>21</height>
     </rect>
    </property>
@@ -87,6 +100,8 @@
    <header>galtonboardview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
