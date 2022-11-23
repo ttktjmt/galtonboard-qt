@@ -37,7 +37,7 @@ private:
     QTimer update_timer;
     QTimer add_timer;
     const uint update_interval_msec = 5;
-    const uint add_interval_msec = 200;
+    const uint add_interval_msec = 300;
     QAccelerometer *Accelerometer = nullptr;
 
     b2BodyDef     ball_def;

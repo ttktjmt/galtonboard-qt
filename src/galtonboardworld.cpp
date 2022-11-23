@@ -110,8 +110,8 @@ void GaltonBoardWorld::AddBall()
     ball->push_back(this->CreateBody(&ball_def));
     ball->back()->CreateFixture(&ball_fixdef);
     ball->back()->SetTransform(b2Vec2(0.0f, 4.0f), 0.0f);
-    ball->back()->SetLinearVelocity(b2Vec2((((float)std::rand()/(float)RAND_MAX)-0.5f)/3, ((float)std::rand()/(float)RAND_MAX)*4-2));
-//    ball->back()->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+//    ball->back()->SetLinearVelocity(b2Vec2((((float)std::rand()/(float)RAND_MAX)-0.5f)/3, ((float)std::rand()/(float)RAND_MAX)*4-2));
+    ball->back()->SetLinearVelocity(b2Vec2((((float)std::rand()/(float)RAND_MAX)-0.5f)/3, 0.0f));
 
     if (ball->size()>=cfg.ballNum) add_timer.stop();
 }
