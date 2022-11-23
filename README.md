@@ -11,4 +11,4 @@ This is a galton board simulator on Qt using box2d as a physics engine.
     - Android Qt 6.4.0 Clang arm64-v8a
 
 # GIF
-![](./res/ver.0.0.1.gif)
+<img src="res/ver.0.0.1.gif" width="400">
