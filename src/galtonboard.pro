@@ -1,8 +1,4 @@
-QT += core gui
-
-!wasm {
-    QT += sensors
-}
+QT += core gui sensors
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
